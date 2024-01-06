@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing App</title>
+    <link rel="stylesheet" href="path/to/cropper.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            margin: 10px 0;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #image-container {
+            margin-top: 20px;
+        }
+
+        #cropper-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Image Processing App</h1>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".png, .jpg, .jpeg, .gif" required>
+        <br>
+        <input type="hidden" name="x" id="x">
+        <input type="hidden" name="y" id="y">
+        <input type="hidden" name="width" id="width">
+        <input type="hidden" name="height" id="height">
+        <input type="submit" value="Process Image">
+    </form>
+
+    <div id="image-container">
+        <h3>Preview Image</h3>
+        <div id="cropper-container">
+            <img id="image" src="" alt="Preview">
+        </div>
+    </div>
+
+    <script src="path/to/cropper.min.js"></script>
+    <script>
+        // Initialize cropper.js
+        const image = document.getElementById('image');
+        const cropper = new Cropper(image, {
+            aspectRatio: 16 / 9, // Set your desired aspect ratio
+            viewMode: 1, // Set your desired view mode
+            autoCropArea: 0.8, // Set your desired auto crop area
+            crop: function (event) {
+                document.getElementById('x').value = event.detail.x;
+                document.getElementById('y').value = event.detail.y;
+                document.getElementById('width').value = event.detail.width;
+                document.getElementById('height').value = event.detail.height;
+            },
+        });
+
+        // Handle file input change
+        document.querySelector('input[type="file"]').addEventListener('change', function (event) {
+            const files = event.target.files;
+            if (files && files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    image.src = e.target.result;
+                    cropper.replace(e.target.result);
+                };
+                reader.readAsDataURL(files[0]);
+            }
+        });
+    </script>
+</body>
+
+</html>
